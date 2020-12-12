@@ -21,7 +21,7 @@ response := struct {
     Map map[string]string `json:"map"`
 }{}
 data, err := xjson.Marshal(response) ; if err != nil {panic(err)}
-log.Print(string(data)) // {"books":null, map:{}}
+log.Print(string(data)) // {"books":[], map:{}}
 ```
 
 2. auto int and float convert to stirng instead return error.
