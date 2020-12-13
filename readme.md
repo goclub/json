@@ -36,28 +36,3 @@ request := struct {
 err := xjson.Unmarshal([]byte(`{"page":"1", "price": "1.05"}`), &request) ; if err != nil {panic(err)}
 log.Printf("%+v", request) // {Page:1 Price:1.05}
 ```
-
-3. ChinaTime
- 
-🇨🇳
-
-支持将 `2020-12-10 15:45:35` 格式的时间以中国时区解析为 `time.Time`
-
-```go
-{
-    request := struct {
-        SendTime ChinaTime `json:"sendTime"`
-    }{}
-    err := Unmarshal([]byte(`{"sendTime": "2020-12-10 15:39:25"}`), &request) ; if err != nil {panic(err)}
-    log.Print(request.SendTime.String()) // 2020-12-10 15:39:25 +0800 CST
-}
-{
-    response := struct {
-        CreateTime ChinaTime `json:"createTime"`
-    }{
-        CreateTime: NewChinaTime(time.Date(2000,1,1,0,0,0,0, time.UTC)),
-    }
-    data, err := Marshal(response) ; if err != nil {panic(err)}
-    log.Print(string(data)) // {"createTime":"2000-01-01 08:00:00"}
-}
-```
