@@ -886,7 +886,6 @@ func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool
 	}
 
 	v = pv
-
 	switch c := item[0]; c {
 	case 'n': // null
 		// The main parser checks that only true and false can reach here,
@@ -959,6 +958,8 @@ func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool
 					} else {
 						v.SetFloat(value)
 					}
+				default:
+					d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})
 				}
 			} else {
 				d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})
@@ -1007,7 +1008,11 @@ func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool
 			if fromQuoted {
 				return fmt.Errorf("json: invalid use of ,string struct tag, trying to unmarshal %q into %v", item, v.Type())
 			}
-			d.saveError(&UnmarshalTypeError{Value: "number", Type: v.Type(), Offset: int64(d.readIndex())})
+			if autoNumberConvertString {
+				v.SetString(s)
+			} else {
+				d.saveError(&UnmarshalTypeError{Value: "number", Type: v.Type(), Offset: int64(d.readIndex())})
+			}
 		case reflect.Interface:
 			n, err := d.convertNumber(s)
 			if err != nil {

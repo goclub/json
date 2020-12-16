@@ -36,3 +36,11 @@ request := struct {
 err := xjson.Unmarshal([]byte(`{"page":"1", "price": "1.05"}`), &request) ; if err != nil {panic(err)}
 log.Printf("%+v", request) // {Page:1 Price:1.05}
 ```
+
+```go
+request := struct {
+   ID string `json:"id"`
+}{}
+err := xjson.Unmarshal([]byte(`{"id":1`), &request) ; if err != nil {panic(err)}
+log.Printf("%+v", request) // {ID:"1"}
+```

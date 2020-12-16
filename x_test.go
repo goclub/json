@@ -30,9 +30,43 @@ func TestNilSliceConvertEmptyArray(t *testing.T) {
 	assert.Equal(t,expect, actual)
 }
 
+func TestUnmarshalIntConvertString(t *testing.T) {
+	autoNumberConvertString = true
+	defer func() {
+		autoNumberConvertString = false
+	}()
+	data := []byte(`{"Int":1,"Int8":2,"Int16":3,"Int32":4,"Int64":5,"Uint":1,"Uint8":2,"Uint16":3,"Uint32":4,"Uint64":5,"Float32":1.111, "Float64":2.222}`)
+	query := struct {
+		Int     string
+		Int8    string
+		Int16   string
+		Int32   string
+		Int64   string
+		Uint    string
+		Uint8   string
+		Uint16  string
+		Uint32  string
+		Uint64  string
+		Float32 string
+		Float64 string
+	}{}
+	err := Unmarshal(data, &query)
+	assert.NoError(t, err)
+	assert.Equal(t,"1", query.Int)
+	assert.Equal(t,"2", query.Int8)
+	assert.Equal(t,"3", query.Int16)
+	assert.Equal(t,"4", query.Int32)
+	assert.Equal(t,"5", query.Int64)
+	assert.Equal(t,"1", query.Uint)
+	assert.Equal(t,"2", query.Uint8)
+	assert.Equal(t,"3", query.Uint16)
+	assert.Equal(t,"4", query.Uint32)
+	assert.Equal(t,"5", query.Uint64)
+	assert.Equal(t,"1.111", query.Float32)
+	assert.Equal(t,"2.222", query.Float64)
+}
 
-
-func TestIntConvertString (t *testing.T) {
+func TestUnmarshalStringConvertInt (t *testing.T) {
 	autoNumberConvertString = true
 	defer func() {
 		autoNumberConvertString = false
