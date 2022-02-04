@@ -1,7 +1,6 @@
 package xjson
 
-import (
-)
+import "log"
 
 var emptyObjectAndArrayNotNull = true
 func emptyObjectString () string {
@@ -20,3 +19,11 @@ func emptyArrayString () string {
 }
 var autoNumberConvertString = true
 
+func Print(name string, v interface{}) {
+	data, err := MarshalIndent(v, "", "  ") ; if err != nil {
+	    log.Print(name, "\n", err)
+	} else {
+		log.Print(name, "\n", string(data))
+	}
+
+}

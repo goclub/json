@@ -108,3 +108,11 @@ func TestUnmarshalStringConvertInt (t *testing.T) {
 		assert.EqualError(t, err, "json: cannot unmarshal string into Go struct field .A of type int")
 	}
 }
+
+func TestPrint(t *testing.T) {
+	v := struct {
+		Name string `json:"name"`
+		Age uint `json:"age"`
+	}{Name: "nimoc", Age: 18}
+	Print("v", v)
+}
