@@ -850,7 +850,7 @@ var numberType = reflect.TypeOf(Number(""))
 func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool) error {
 	// Check for unmarshaler.
 	if len(item) == 0 {
-		//Empty string given
+		// Empty string given
 		d.saveError(fmt.Errorf("json: invalid use of ,string struct tag, trying to unmarshal %q into %v", item, v.Type()))
 		return nil
 	}
@@ -936,23 +936,34 @@ func (d *decodeState) literalStore(item []byte, v reflect.Value, fromQuoted bool
 		default:
 			if autoNumberConvertString {
 				switch v.Kind() {
-				case reflect.Int, reflect.Int8, reflect.Int16,reflect.Int32, reflect.Int64:
-					value , err := strconv.Atoi(string(s))
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					if len(s) == 0 {
+						s = []byte(`0`)
+					}
+					value, err := strconv.Atoi(string(s))
 					if err != nil {
 						d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})
 					} else {
 						v.SetInt(int64(value))
 					}
 				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-					value , err := strconv.Atoi(string(s))
+					if len(s) == 0 {
+						s = []byte(`0`)
+					}
+					value, err := strconv.Atoi(string(s))
 					if err != nil {
 						d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})
 					} else {
 						v.SetUint(uint64(value))
 					}
 				case reflect.Float32, reflect.Float64:
-					value , err := strconv.ParseFloat(string(s), 64)
-					if err != nil {d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})}
+					if len(s) == 0 {
+						s = []byte(`0`)
+					}
+					value, err := strconv.ParseFloat(string(s), 64)
+					if err != nil {
+						d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})
+					}
 					if err != nil {
 						d.saveError(&UnmarshalTypeError{Value: "string", Type: v.Type(), Offset: int64(d.readIndex())})
 					} else {
